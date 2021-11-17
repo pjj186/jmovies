@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "jmovies",
+    "slug": "jmovies",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "jmovies"
+}
