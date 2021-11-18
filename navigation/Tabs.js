@@ -6,6 +6,7 @@ import Tv from "../screens/Tv";
 import Search from "../screens/Search";
 import { useColorScheme } from "react-native";
 import { BLACK_COLOR, GREY_COLOR, YELLOW_COLOR } from "../colors";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,11 +28,61 @@ const Tabs = () => {
         headerTitleStyle: {
           color: isDark ? "white" : BLACK_COLOR,
         },
+        tabBarLabelStyle: {
+          marginTop: -5,
+          fontSize: 13,
+          fontWeight: "600",
+        },
       }}
     >
-      <Tab.Screen name="Movies" component={Movies}></Tab.Screen>
-      <Tab.Screen name="Tv" component={Tv}></Tab.Screen>
-      <Tab.Screen name="Search" component={Search}></Tab.Screen>
+      <Tab.Screen
+        name="Movies"
+        component={Movies}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => {
+            // focused : 현재 탭이 선택되었는지
+            // color : 네비게이터 컬러 (따로 값을 안주면 screenOption에 적용된 컬러 혹은 디폴트 컬러)
+            // size : 네비게이터 텍스트 사이즈 (따로 값을 안주면 screenOption에 적용된 컬러 혹은 디폴트 컬러)
+            return (
+              <Ionicons
+                name={focused ? "film" : "film-outline"}
+                color={color}
+                size={size}
+              />
+            );
+          },
+        }}
+      ></Tab.Screen>
+      <Tab.Screen
+        name="TV"
+        component={Tv}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <Ionicons
+                name={focused ? "tv" : "tv-outline"}
+                color={color}
+                size={size}
+              />
+            );
+          },
+        }}
+      ></Tab.Screen>
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+              <Ionicons
+                name={focused ? "search" : "search-outline"}
+                color={color}
+                size={size}
+              />
+            );
+          },
+        }}
+      ></Tab.Screen>
     </Tab.Navigator>
   );
 };
