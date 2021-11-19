@@ -8,6 +8,7 @@ import { useColorScheme } from "react-native";
 import { BLACK_COLOR, GREY_COLOR, YELLOW_COLOR } from "../colors";
 import { Ionicons } from "@expo/vector-icons";
 
+// 탭 생성
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
