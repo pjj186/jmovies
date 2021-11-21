@@ -7,6 +7,7 @@ import Search from "../screens/Search";
 import { useColorScheme } from "react-native";
 import { BLACK_COLOR, GREY_COLOR, YELLOW_COLOR } from "../colors";
 import { Ionicons } from "@expo/vector-icons";
+import Stack from "./Stack";
 
 // 탭 생성
 const Tab = createBottomTabNavigator();
