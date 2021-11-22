@@ -1,11 +1,13 @@
 import AppLoading from "expo-app-loading";
 import React, { useState } from "react";
-import { Text, Image } from "react-native";
+import { Text, Image, useColorScheme } from "react-native";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { NavigationContainer } from "@react-navigation/native";
 import Root from "./navigation/Root";
+import { ThemeProvider } from "styled-components/native";
+import { darkTheme, lightTheme } from "./styled";
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
 
@@ -25,6 +27,7 @@ export default function App() {
     const fonts = loadFonts([Ionicons.font]);
     await Promise.all([...fonts]);
   };
+  const isDark = useColorScheme() === "dark";
   if (!ready) {
     return (
       <AppLoading
@@ -34,9 +37,13 @@ export default function App() {
       />
     );
   }
+
+  // 앱 전체를 ThemeProvider로 감싸줬기 때문에 안에 있는 모든 Component가 darkTheme 이나 lightTheme 같은 Theme에 접근 할 수 있음
   return (
-    <NavigationContainer>
-      <Root />
-    </NavigationContainer>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <NavigationContainer>
+        <Root />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }

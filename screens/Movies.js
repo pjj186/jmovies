@@ -5,10 +5,11 @@ const Btn = styled.TouchableOpacity`
   flex: 1;
   justify-content: center;
   align-items: center;
+  background-color: ${(props) => props.theme.mainBgColor};
 `;
 
 const Title = styled.Text`
-  color: ${(props) => (props.selected ? "blue" : "red")};
+  color: ${(props) => props.theme.textColor};
 `;
 
 const Movies = ({ navigation: { navigate } }) => (
@@ -17,8 +18,7 @@ const Movies = ({ navigation: { navigate } }) => (
     // navigate("navigator이름"(Root.js에 명시되있음), {screen: "스크린 이름"}) 이런식으로 해야한다.
     onPress={() => navigate("Stack", { screen: "Three" })}
   >
-    <Title selected={false}>Movie</Title>
-    <Title selected={true}>Movie</Title>
+    <Title>Movie</Title>
   </Btn>
 );
 
