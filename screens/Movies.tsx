@@ -48,6 +48,39 @@ const Votes = styled.Text<{ isDark: boolean }>`
     props.isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)"};
 `;
 
+const ListContainer = styled.View`
+  margin-bottom: 40px;
+`;
+
+const HMovie = styled.View`
+  padding: 0px 30px;
+  flex-direction: row;
+  margin-bottom: 30px;
+`;
+
+const Hcolumn = styled.View`
+  margin-left: 15px;
+  width: 80%;
+`;
+
+const Overview = styled.Text<{ isDark: boolean }>`
+  color: ${(props) =>
+    props.isDark ? "rgba(255,255,255,0.5)" : props.theme.textColor};
+  width: 80%;
+`;
+
+const Release = styled.Text<{ isDark: boolean }>`
+  color: ${(props) =>
+    props.isDark ? "rgba(255,255,255,0.5)" : props.theme.textColor};
+  font-weight: 600;
+  font-size: 12px;
+  margin-vertical: 10px;
+`;
+
+const ComingSoonTitle = styled(ListTitle)`
+  margin-bottom: 30px;
+`;
+
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const [loading, setLoading] = useState(true);
   const [nowPlaying, setNowPlaying] = useState([]);
@@ -115,28 +148,56 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
             backdropPath={movie.backdrop_path}
             posterPath={movie.poster_path}
             voteAverage={movie.vote_average}
-            originalTitle={movie.original_title}
+            originalTitle={movie.title}
             overview={movie.overview}
           />
         ))}
       </Swiper>
-      <ListTitle isDark={isDark}>Trending Movies</ListTitle>
-      <TrendingScroll
-        contentContainerStyle={{ paddingLeft: 30 }} // 스크롤뷰는 스타일을 줄 때 style prop 보다는 contentContainerStyle prop을 이용하여 주는게 좋다.
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {trending.map((movie) => (
-          <Movie key={movie.id}>
-            <Poster path={movie.poster_path} />
-            <Title isDark={isDark}>
-              {movie.original_title.slice(0, 13)}
-              {movie.original_title.length > 13 ? "..." : null}
-            </Title>
-            <Votes isDark={isDark}>⭐️ {movie.vote_average}/10</Votes>
-          </Movie>
-        ))}
-      </TrendingScroll>
+      <ListContainer>
+        <ListTitle isDark={isDark}>Trending Movies</ListTitle>
+        <TrendingScroll
+          contentContainerStyle={{ paddingLeft: 30 }} // 스크롤뷰는 스타일을 줄 때 style prop 보다는 contentContainerStyle prop을 이용하여 주는게 좋다.
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          {trending.map((movie) => (
+            <Movie key={movie.id}>
+              <Poster path={movie.poster_path} />
+              <Title isDark={isDark}>
+                {movie.title.slice(0, 13)}
+                {movie.title.length > 13 ? "..." : null}
+              </Title>
+              <Votes isDark={isDark}>
+                {movie.vote_average > 0
+                  ? `⭐️ ${movie.vote_average}/10`
+                  : `Coming soon`}
+              </Votes>
+            </Movie>
+          ))}
+        </TrendingScroll>
+      </ListContainer>
+      <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
+      {upcoming.map((movie) => (
+        <HMovie key={movie.id}>
+          <Poster path={movie.poster_path} />
+          <Hcolumn>
+            <Title isDark={isDark}>{movie.title}</Title>
+            <Release isDark={isDark}>
+              개봉일:{" "}
+              {new Date(movie.release_date).toLocaleDateString("ko", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </Release>
+            <Overview isDark={isDark}>
+              {movie.overview !== "" && movie.overview.length > 140
+                ? movie.overview.slice(0, 140) + "..."
+                : movie.overview}
+            </Overview>
+          </Hcolumn>
+        </HMovie>
+      ))}
     </Container>
   );
 };
