@@ -1,6 +1,11 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, useColorScheme } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  RefreshControl,
+  useColorScheme,
+} from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
@@ -86,6 +91,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const [nowPlaying, setNowPlaying] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [trending, setTrending] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const isDark = useColorScheme() === "dark";
 
@@ -123,12 +129,22 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     getData();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true); // 아래 refreshControl 에서 refreshing prop이 true 이면 스크롤뷰를 잡아당겼을때 위에 계속 스피닝이 돌고있다.
+    await getData();
+    setRefreshing(false); // 로딩이 끝나면 false를 해줌으로써 스피닝이 안돔
+  };
+
   return loading ? (
     <Loader>
       <ActivityIndicator />
     </Loader>
   ) : (
-    <Container>
+    <Container
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Swiper
         horizontal
         loop
