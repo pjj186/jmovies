@@ -41,7 +41,8 @@ interface HMediaProps {
   posterPath: string;
   Htitle: string;
   overview: string;
-  releaseDate: string;
+  releaseDate?: string;
+  voteAverage?: number;
 }
 
 const HMedia: React.FC<HMediaProps> = ({
@@ -56,14 +57,16 @@ const HMedia: React.FC<HMediaProps> = ({
       <Poster path={posterPath} />
       <Hcolumn>
         <Title isDark={isDark}>{Htitle}</Title>
-        <Release isDark={isDark}>
-          개봉일:{" "}
-          {new Date(releaseDate).toLocaleDateString("ko", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </Release>
+        {releaseDate ? (
+          <Release isDark={isDark}>
+            개봉일:
+            {new Date(releaseDate).toLocaleDateString("ko", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </Release>
+        ) : null}
         <Overview isDark={isDark}>
           {overview !== "" && overview.length > 140
             ? overview.slice(0, 140) + "..."
