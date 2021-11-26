@@ -10,6 +10,8 @@ import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import Poster from "../components/Poster";
+import VMedia from "../components/VMedia";
+import HMedia from "../components/HMedia";
 
 const API_KEY = "0c6f3c84d4564ed4f2afcb7aa3744089";
 
@@ -34,52 +36,8 @@ const TrendingScroll = styled.ScrollView`
   margin-top: 20px;
 `;
 
-const Movie = styled.View`
-  margin-right: 20px;
-  align-items: center;
-`;
-
-const Title = styled.Text<{ isDark: boolean }>`
-  font-weight: 600;
-  margin-top: 7px;
-  margin-bottom: 5px;
-  color: ${(props) =>
-    props.isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)"};
-`;
-
-const Votes = styled.Text<{ isDark: boolean }>`
-  font-size: 10px;
-  color: ${(props) =>
-    props.isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)"};
-`;
-
 const ListContainer = styled.View`
   margin-bottom: 40px;
-`;
-
-const HMovie = styled.View`
-  padding: 0px 30px;
-  flex-direction: row;
-  margin-bottom: 30px;
-`;
-
-const Hcolumn = styled.View`
-  margin-left: 15px;
-  width: 80%;
-`;
-
-const Overview = styled.Text<{ isDark: boolean }>`
-  color: ${(props) =>
-    props.isDark ? "rgba(255,255,255,0.5)" : props.theme.textColor};
-  width: 80%;
-`;
-
-const Release = styled.Text<{ isDark: boolean }>`
-  color: ${(props) =>
-    props.isDark ? "rgba(255,255,255,0.5)" : props.theme.textColor};
-  font-weight: 600;
-  font-size: 12px;
-  margin-vertical: 10px;
 `;
 
 const ComingSoonTitle = styled(ListTitle)`
@@ -177,42 +135,26 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
           showsHorizontalScrollIndicator={false}
         >
           {trending.map((movie) => (
-            <Movie key={movie.id}>
-              <Poster path={movie.poster_path} />
-              <Title isDark={isDark}>
-                {movie.title.slice(0, 13)}
-                {movie.title.length > 13 ? "..." : null}
-              </Title>
-              <Votes isDark={isDark}>
-                {movie.vote_average > 0
-                  ? `⭐️ ${movie.vote_average}/10`
-                  : `Coming soon`}
-              </Votes>
-            </Movie>
+            <VMedia
+              key={movie.id}
+              posterPath={movie.poster_path}
+              Vtitle={movie.title}
+              voteAverage={movie.vote_average}
+              isDark={isDark}
+            />
           ))}
         </TrendingScroll>
       </ListContainer>
       <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
       {upcoming.map((movie) => (
-        <HMovie key={movie.id}>
-          <Poster path={movie.poster_path} />
-          <Hcolumn>
-            <Title isDark={isDark}>{movie.title}</Title>
-            <Release isDark={isDark}>
-              개봉일:{" "}
-              {new Date(movie.release_date).toLocaleDateString("ko", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </Release>
-            <Overview isDark={isDark}>
-              {movie.overview !== "" && movie.overview.length > 140
-                ? movie.overview.slice(0, 140) + "..."
-                : movie.overview}
-            </Overview>
-          </Hcolumn>
-        </HMovie>
+        <HMedia
+          key={movie.id}
+          isDark={isDark}
+          posterPath={movie.poster_path}
+          Htitle={movie.title}
+          overview={movie.overview}
+          releaseDate={movie.release_date}
+        />
       ))}
     </Container>
   );
