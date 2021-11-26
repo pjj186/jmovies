@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
+  View,
+  Text,
   RefreshControl,
   useColorScheme,
 } from "react-native";
@@ -32,7 +34,7 @@ const ListTitle = styled.Text<{ isDark: boolean }>`
   color: ${(props) => (props.isDark ? "white" : props.theme.textColor)};
 `;
 
-const TrendingScroll = styled.ScrollView`
+const TrendingScroll = styled.FlatList`
   margin-top: 20px;
 `;
 
@@ -130,20 +132,21 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
       <ListContainer>
         <ListTitle isDark={isDark}>Trending Movies</ListTitle>
         <TrendingScroll
-          contentContainerStyle={{ paddingLeft: 30 }} // 스크롤뷰는 스타일을 줄 때 style prop 보다는 contentContainerStyle prop을 이용하여 주는게 좋다.
+          data={trending}
           horizontal
+          keyExtractor={(item) => item.id + ""}
           showsHorizontalScrollIndicator={false}
-        >
-          {trending.map((movie) => (
+          contentContainerStyle={{ paddingHorizontal: 30 }}
+          ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
+          renderItem={({ item }) => (
             <VMedia
-              key={movie.id}
-              posterPath={movie.poster_path}
-              Vtitle={movie.title}
-              voteAverage={movie.vote_average}
+              posterPath={item.poster_path}
+              Vtitle={item.title}
+              voteAverage={item.vote_average}
               isDark={isDark}
             />
-          ))}
-        </TrendingScroll>
+          )}
+        />
       </ListContainer>
       <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
       {upcoming.map((movie) => (

@@ -5,7 +5,6 @@ import Poster from "./Poster";
 import Votes from "./Votes";
 
 const Movie = styled.View`
-  margin-right: 20px;
   align-items: center;
 `;
 
@@ -34,8 +33,8 @@ const VMedia: React.FC<VMediaProps> = ({
     <Movie>
       <Poster path={posterPath} />
       <Title isDark={isDark}>
-        {Vtitle.slice(0, 13)}
-        {Vtitle.length > 13 ? "..." : null}
+        {Vtitle.slice(0, 7)}
+        {Vtitle.length > 7 ? "..." : null}
       </Title>
       <Votes isDark={isDark} voteAverage={voteAverage} />
     </Movie>
