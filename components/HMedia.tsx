@@ -6,7 +6,6 @@ import Poster from "./Poster";
 const HMovie = styled.View`
   padding: 0px 30px;
   flex-direction: row;
-  margin-bottom: 30px;
 `;
 
 const Hcolumn = styled.View`

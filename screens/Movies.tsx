@@ -7,6 +7,7 @@ import {
   Text,
   RefreshControl,
   useColorScheme,
+  FlatList,
 } from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
@@ -17,7 +18,7 @@ import HMedia from "../components/HMedia";
 
 const API_KEY = "0c6f3c84d4564ed4f2afcb7aa3744089";
 
-const Container = styled.ScrollView``;
+const Container = styled.FlatList``;
 
 const Loader = styled.View`
   flex: 1;
@@ -100,66 +101,71 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
       <ActivityIndicator />
     </Loader>
   ) : (
-    <Container
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <Swiper
-        horizontal
-        loop
-        autoplay
-        autoplayTimeout={3.5}
-        showsButtons={false}
-        showsPagination={false}
-        containerStyle={{
-          marginBottom: 30,
-          width: "100%",
-          height: SCREEN_HEIGHT / 4,
-        }}
-      >
-        {nowPlaying.map((movie) => (
-          <Slide
-            key={movie.id}
-            backdropPath={movie.backdrop_path}
-            posterPath={movie.poster_path}
-            voteAverage={movie.vote_average}
-            originalTitle={movie.title}
-            overview={movie.overview}
-          />
-        ))}
-      </Swiper>
-      <ListContainer>
-        <ListTitle isDark={isDark}>Trending Movies</ListTitle>
-        <TrendingScroll
-          data={trending}
-          horizontal
-          keyExtractor={(item) => item.id + ""}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 30 }}
-          ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
-          renderItem={({ item }) => (
-            <VMedia
-              posterPath={item.poster_path}
-              Vtitle={item.title}
-              voteAverage={item.vote_average}
-              isDark={isDark}
+    <FlatList
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+      ListHeaderComponent={
+        <>
+          <Swiper
+            horizontal
+            loop
+            autoplay
+            autoplayTimeout={3.5}
+            showsButtons={false}
+            showsPagination={false}
+            containerStyle={{
+              marginBottom: 30,
+              width: "100%",
+              height: SCREEN_HEIGHT / 4,
+            }}
+          >
+            {nowPlaying.map((movie) => (
+              <Slide
+                key={movie.id}
+                backdropPath={movie.backdrop_path}
+                posterPath={movie.poster_path}
+                voteAverage={movie.vote_average}
+                originalTitle={movie.title}
+                overview={movie.overview}
+              />
+            ))}
+          </Swiper>
+          <ListContainer>
+            <ListTitle isDark={isDark}>Trending Movies</ListTitle>
+            <TrendingScroll
+              data={trending}
+              horizontal
+              keyExtractor={(item) => item.id + ""}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 30 }}
+              ItemSeparatorComponent={() => <View style={{ width: 30 }} />}
+              renderItem={({ item }) => (
+                <VMedia
+                  posterPath={item.poster_path}
+                  Vtitle={item.title}
+                  voteAverage={item.vote_average}
+                  isDark={isDark}
+                />
+              )}
             />
-          )}
-        />
-      </ListContainer>
-      <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
-      {upcoming.map((movie) => (
+          </ListContainer>
+          <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
+        </>
+      }
+      data={upcoming}
+      keyExtractor={(item) => item.id + ""}
+      showsHorizontalScrollIndicator={false}
+      ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+      renderItem={({ item }) => (
         <HMedia
-          key={movie.id}
           isDark={isDark}
-          posterPath={movie.poster_path}
-          Htitle={movie.title}
-          overview={movie.overview}
-          releaseDate={movie.release_date}
+          posterPath={item.poster_path}
+          Htitle={item.title}
+          overview={item.overview}
+          releaseDate={item.release_date}
         />
-      ))}
-    </Container>
+      )}
+    />
   );
 };
 
