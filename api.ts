@@ -14,5 +14,7 @@ export const upcoming = () =>
 
 export const nowPlaying = () =>
   fetch(
-    `${BASE_URL}/now_playing?api_key=${API_KEY}&language=ko-KR&page=1&region=KR`
+    `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&page=1&region=KR`
   ).then((res) => res.json());
+
+export const movieAPI = { trending, upcoming, nowPlaying };

@@ -21,6 +21,7 @@ const Tabs = () => {
         backgroundColor: isDark ? BLACK_COLOR : "white",
       }}
       screenOptions={{
+        unmountOnBlur: true, // 화면을 벗어나면 메모리에서 그 컴포넌트를 삭제해준다.
         tabBarStyle: {
           backgroundColor: isDark ? BLACK_COLOR : "white",
         },

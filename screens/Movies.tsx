@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -11,6 +11,8 @@ import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
+import { useQuery } from "react-query";
+import { movieAPI } from "../api";
 
 const Loader = styled.View`
   flex: 1;
@@ -44,11 +46,24 @@ const VSeperator = styled.View`
 `;
 
 const HSeperator = styled.View`
-  width: 20px;
+  height: 20px;
 `;
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const [refreshing, setRefreshing] = useState(false);
+
+  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+    "nowPlaying", // 이 부분이 키값인데, 키 값이 필요한 이유는 "캐싱 시스템" 때문, 한번 데이터를 fetch하면 그 키값에 저장하고 다시 fetch하지 않는다. 즉 데이터가 유지되어있음 그러나 이미지는 다시 로드 할 수도있음
+    movieAPI.nowPlaying
+  );
+  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+    "upcoming",
+    movieAPI.upcoming
+  );
+  const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    "trending",
+    movieAPI.trending
+  );
 
   const isDark = useColorScheme() === "dark";
 
@@ -83,6 +98,8 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 
   const movieKeyExtractor = (item) => item.id + "";
 
+  const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
+
   return loading ? (
     <Loader>
       <ActivityIndicator />
@@ -106,7 +123,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
               height: SCREEN_HEIGHT / 4,
             }}
           >
-            {nowPlaying.map((movie) => (
+            {nowPlayingData.results.map((movie) => (
               <Slide
                 key={movie.id}
                 backdropPath={movie.backdrop_path}
@@ -120,7 +137,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
           <ListContainer>
             <ListTitle isDark={isDark}>Trending Movies</ListTitle>
             <TrendingScroll
-              data={trending}
+              data={trendingData.results}
               horizontal
               keyExtractor={movieKeyExtractor}
               showsHorizontalScrollIndicator={false}
@@ -132,7 +149,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
           <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
         </>
       }
-      data={upcoming}
+      data={upcomingData.results}
       keyExtractor={movieKeyExtractor}
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={HSeperator}
