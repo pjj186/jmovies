@@ -3,9 +3,6 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
-  View,
-  Text,
-  RefreshControl,
   useColorScheme,
   FlatList,
 } from "react-native";
