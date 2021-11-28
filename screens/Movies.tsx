@@ -18,8 +18,6 @@ import HMedia from "../components/HMedia";
 
 const API_KEY = "0c6f3c84d4564ed4f2afcb7aa3744089";
 
-const Container = styled.FlatList``;
-
 const Loader = styled.View`
   flex: 1;
   justify-content: center;
@@ -45,6 +43,14 @@ const ListContainer = styled.View`
 
 const ComingSoonTitle = styled(ListTitle)`
   margin-bottom: 30px;
+`;
+
+const VSeperator = styled.View`
+  width: 20px;
+`;
+
+const HSeperator = styled.View`
+  width: 20px;
 `;
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
@@ -96,6 +102,31 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     setRefreshing(false); // 로딩이 끝나면 false를 해줌으로써 스피닝이 안돔
   };
 
+  const renderVMedia = ({ item }) => {
+    return (
+      <VMedia
+        posterPath={item.poster_path}
+        Vtitle={item.title}
+        voteAverage={item.vote_average}
+        isDark={isDark}
+      />
+    );
+  };
+
+  const renderHMedia = ({ item }) => {
+    return (
+      <HMedia
+        isDark={isDark}
+        posterPath={item.poster_path}
+        Htitle={item.title}
+        overview={item.overview}
+        releaseDate={item.release_date}
+      />
+    );
+  };
+
+  const movieKeyExtractor = (item) => item.id + "";
+
   return loading ? (
     <Loader>
       <ActivityIndicator />
@@ -135,36 +166,21 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
             <TrendingScroll
               data={trending}
               horizontal
-              keyExtractor={(item) => item.id + ""}
+              keyExtractor={movieKeyExtractor}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ paddingHorizontal: 30 }}
-              ItemSeparatorComponent={() => <View style={{ width: 30 }} />}
-              renderItem={({ item }) => (
-                <VMedia
-                  posterPath={item.poster_path}
-                  Vtitle={item.title}
-                  voteAverage={item.vote_average}
-                  isDark={isDark}
-                />
-              )}
+              ItemSeparatorComponent={VSeperator}
+              renderItem={renderVMedia}
             />
           </ListContainer>
           <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
         </>
       }
       data={upcoming}
-      keyExtractor={(item) => item.id + ""}
+      keyExtractor={movieKeyExtractor}
       showsHorizontalScrollIndicator={false}
-      ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-      renderItem={({ item }) => (
-        <HMedia
-          isDark={isDark}
-          posterPath={item.poster_path}
-          Htitle={item.title}
-          overview={item.overview}
-          releaseDate={item.release_date}
-        />
-      )}
+      ItemSeparatorComponent={HSeperator}
+      renderItem={renderHMedia}
     />
   );
 };
