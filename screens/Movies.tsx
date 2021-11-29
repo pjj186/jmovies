@@ -54,34 +54,23 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const {
     isLoading: nowPlayingLoading,
     data: nowPlayingData,
-    refetch: refetchNowPlaying,
     isRefetching: isRefetchingNowPlaying,
-  } = useQuery(
-    "nowPlaying", // 이 부분이 키값인데, 키 값이 필요한 이유는 "캐싱 시스템" 때문, 한번 데이터를 fetch하면 그 키값에 저장하고 다시 fetch하지 않는다. 즉 데이터가 유지되어있음 그러나 이미지는 다시 로드 할 수도있음
-    movieAPI.nowPlaying
-  );
+  } = useQuery(["movies", "nowPlaying"], movieAPI.nowPlaying);
   const {
     isLoading: upcomingLoading,
     data: upcomingData,
-    refetch: refetchUpcoming,
     isRefetching: isRefetchingUpcoming,
-  } = useQuery("upcoming", movieAPI.upcoming);
+  } = useQuery(["movies", "upcoming"], movieAPI.upcoming);
   const {
     isLoading: trendingLoading,
     data: trendingData,
-    refetch: refetchTrending,
     isRefetching: isRefetchingTrending,
-  } = useQuery("trending", movieAPI.trending);
+  } = useQuery(["movies", "trending"], movieAPI.trending);
   // useQuery!!
 
   const isDark = useColorScheme() === "dark";
 
-  const onRefresh = async () => {
-    // 각 카테고리들을 리패치 하는 함수를 리프레시 할 때 실행하는거임.
-    refetchNowPlaying();
-    refetchTrending();
-    refetchUpcoming();
-  };
+  const onRefresh = async () => {};
 
   const renderVMedia = ({ item }) => {
     return (
