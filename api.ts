@@ -26,7 +26,7 @@ interface BaseResponse {
 }
 
 export interface MovieResponse extends BaseResponse {
-  results: Movie[];
+  results: Movie[]; // results는 Movie타입 배열
 }
 
 export const trending = () =>

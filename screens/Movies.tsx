@@ -53,6 +53,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const queryClient = useQueryClient();
 
   // useQuery!!
+  // useQuery로 받아오는 데이터들을 <MovieResponse> 인터페이스에 적용시켜 받아옴
   const {
     isLoading: nowPlayingLoading,
     data: nowPlayingData,
