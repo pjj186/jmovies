@@ -31,7 +31,7 @@ const ListTitle = styled.Text<{ isDark: boolean }>`
 
 const TrendingScroll = styled.FlatList`
   margin-top: 20px;
-`;
+` as unknown as typeof FlatList;
 
 const ListContainer = styled.View`
   margin-bottom: 40px;
@@ -125,10 +125,10 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ paddingHorizontal: 30 }}
                 ItemSeparatorComponent={VSeperator}
-                renderItem={(item) => (
+                renderItem={({ item }) => (
                   <VMedia
-                    posterPath={item.poster_path}
-                    Vtitle={item.title}
+                    posterPath={item.poster_path || ""}
+                    Vtitle={item.title || ""}
                     voteAverage={item.vote_average}
                     isDark={isDark}
                   />
@@ -143,12 +143,12 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
       keyExtractor={(item) => item.id + ""}
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={HSeperator}
-      renderItem={(item) => (
+      renderItem={({ item }) => (
         <HMedia
           isDark={isDark}
-          posterPath={item.poster_path}
+          posterPath={item.poster_path || ""}
           Htitle={item.title}
-          overview={item.overview}
+          overview={item.overview || ""}
           releaseDate={item.release_date}
         />
       )}
