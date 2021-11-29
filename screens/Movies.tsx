@@ -11,7 +11,7 @@ import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
-import { queryClient, useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { movieAPI } from "../api";
 
 const Loader = styled.View`
@@ -50,6 +50,8 @@ const HSeperator = styled.View`
 `;
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
+  const queryClient = useQueryClient();
+
   // useQuery!!
   const {
     isLoading: nowPlayingLoading,
