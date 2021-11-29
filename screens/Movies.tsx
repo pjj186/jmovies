@@ -50,27 +50,37 @@ const HSeperator = styled.View`
 `;
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
-  const [refreshing, setRefreshing] = useState(false);
-
-  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+  // useQuery!!
+  const {
+    isLoading: nowPlayingLoading,
+    data: nowPlayingData,
+    refetch: refetchNowPlaying,
+    isRefetching: isRefetchingNowPlaying,
+  } = useQuery(
     "nowPlaying", // 이 부분이 키값인데, 키 값이 필요한 이유는 "캐싱 시스템" 때문, 한번 데이터를 fetch하면 그 키값에 저장하고 다시 fetch하지 않는다. 즉 데이터가 유지되어있음 그러나 이미지는 다시 로드 할 수도있음
     movieAPI.nowPlaying
   );
-  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
-    "upcoming",
-    movieAPI.upcoming
-  );
-  const { isLoading: trendingLoading, data: trendingData } = useQuery(
-    "trending",
-    movieAPI.trending
-  );
+  const {
+    isLoading: upcomingLoading,
+    data: upcomingData,
+    refetch: refetchUpcoming,
+    isRefetching: isRefetchingUpcoming,
+  } = useQuery("upcoming", movieAPI.upcoming);
+  const {
+    isLoading: trendingLoading,
+    data: trendingData,
+    refetch: refetchTrending,
+    isRefetching: isRefetchingTrending,
+  } = useQuery("trending", movieAPI.trending);
+  // useQuery!!
 
   const isDark = useColorScheme() === "dark";
 
   const onRefresh = async () => {
-    // setRefreshing(true); // 아래 refreshControl 에서 refreshing prop이 true 이면 스크롤뷰를 잡아당겼을때 위에 계속 스피닝이 돌고있다.
-    // await getData();
-    // setRefreshing(false); // 로딩이 끝나면 false를 해줌으로써 스피닝이 안돔
+    // 각 카테고리들을 리패치 하는 함수를 리프레시 할 때 실행하는거임.
+    refetchNowPlaying();
+    refetchTrending();
+    refetchUpcoming();
   };
 
   const renderVMedia = ({ item }) => {
@@ -99,6 +109,9 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const movieKeyExtractor = (item) => item.id + "";
 
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
+  const refreshing =
+    isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
+  // isRefetching : 리패칭 상태를 boolean 타입으로 반환함. 리패칭이 끝나면 false, 리패칭 중이면 true
 
   return loading ? (
     <Loader>
