@@ -1,11 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  useColorScheme,
-  FlatList,
-} from "react-native";
+import { Dimensions, useColorScheme, FlatList } from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
@@ -13,12 +8,7 @@ import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
 import { useQuery, useQueryClient } from "react-query";
 import { movieAPI, MovieResponse } from "../api";
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
+import Loader from "../components/Loader";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -83,9 +73,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   // isRefetching : 리패칭 상태를 boolean 타입으로 반환함. 리패칭이 끝나면 false, 리패칭 중이면 true
 
   return loading ? (
-    <Loader>
-      <ActivityIndicator />
-    </Loader>
+    <Loader />
   ) : upcomingData ? (
     <FlatList
       onRefresh={onRefresh}
