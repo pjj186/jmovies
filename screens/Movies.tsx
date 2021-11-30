@@ -33,21 +33,12 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 
   // useQuery!!
   // useQuery로 받아오는 데이터들을 <MovieResponse> 인터페이스에 적용시켜 받아옴
-  const {
-    isLoading: nowPlayingLoading,
-    data: nowPlayingData,
-    isRefetching: isRefetchingNowPlaying,
-  } = useQuery<MovieResponse>(["movies", "nowPlaying"], movieAPI.nowPlaying);
-  const {
-    isLoading: upcomingLoading,
-    data: upcomingData,
-    isRefetching: isRefetchingUpcoming,
-  } = useQuery<MovieResponse>(["movies", "upcoming"], movieAPI.upcoming);
-  const {
-    isLoading: trendingLoading,
-    data: trendingData,
-    isRefetching: isRefetchingTrending,
-  } = useQuery<MovieResponse>(["movies", "trending"], movieAPI.trending);
+  const { isLoading: nowPlayingLoading, data: nowPlayingData } =
+    useQuery<MovieResponse>(["movies", "nowPlaying"], movieAPI.nowPlaying);
+  const { isLoading: upcomingLoading, data: upcomingData } =
+    useQuery<MovieResponse>(["movies", "upcoming"], movieAPI.upcoming);
+  const { isLoading: trendingLoading, data: trendingData } =
+    useQuery<MovieResponse>(["movies", "trending"], movieAPI.trending);
   // useQuery!!
 
   const isDark = useColorScheme() === "dark";

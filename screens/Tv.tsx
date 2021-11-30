@@ -10,21 +10,18 @@ const Tv = () => {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
 
-  const {
-    isLoading: todayLoading,
-    data: todayData,
-    isRefetching: todayRefetching,
-  } = useQuery(["tv", "today"], tvApi.airingToday);
-  const {
-    isLoading: topLoading,
-    data: topData,
-    isRefetching: topRefetching,
-  } = useQuery(["tv", "top"], tvApi.topRated);
-  const {
-    isLoading: trendingLoading,
-    data: trendingData,
-    isRefetching: trendingRefetching,
-  } = useQuery(["tv", "trending"], tvApi.trending);
+  const { isLoading: todayLoading, data: todayData } = useQuery(
+    ["tv", "today"],
+    tvApi.airingToday
+  );
+  const { isLoading: topLoading, data: topData } = useQuery(
+    ["tv", "top"],
+    tvApi.topRated
+  );
+  const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    ["tv", "trending"],
+    tvApi.trending
+  );
 
   const isDark = useColorScheme() === "dark";
 
