@@ -4,11 +4,11 @@ import { Dimensions, useColorScheme, FlatList } from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
-import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
 import { useQuery, useQueryClient } from "react-query";
 import { movieAPI, MovieResponse } from "../api";
 import Loader from "../components/Loader";
+import HList from "../components/HList";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -19,20 +19,8 @@ const ListTitle = styled.Text<{ isDark: boolean }>`
   color: ${(props) => (props.isDark ? "white" : props.theme.textColor)};
 `;
 
-const TrendingScroll = styled.FlatList`
-  margin-top: 20px;
-` as unknown as typeof FlatList;
-
-const ListContainer = styled.View`
-  margin-bottom: 40px;
-`;
-
 const ComingSoonTitle = styled(ListTitle)`
   margin-bottom: 30px;
-`;
-
-const VSeperator = styled.View`
-  width: 20px;
 `;
 
 const HSeperator = styled.View`
@@ -104,27 +92,13 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
               />
             ))}
           </Swiper>
-          <ListContainer>
-            <ListTitle isDark={isDark}>Trending Movies</ListTitle>
-            {trendingData ? (
-              <TrendingScroll
-                data={trendingData.results}
-                horizontal
-                keyExtractor={(item) => item.id + ""}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 30 }}
-                ItemSeparatorComponent={VSeperator}
-                renderItem={({ item }) => (
-                  <VMedia
-                    posterPath={item.poster_path || ""}
-                    Vtitle={item.title || ""}
-                    voteAverage={item.vote_average}
-                    isDark={isDark}
-                  />
-                )}
-              />
-            ) : null}
-          </ListContainer>
+          {trendingData ? (
+            <HList
+              title="Trending Movies"
+              data={trendingData.results}
+              isDark={isDark}
+            />
+          ) : null}
           <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
         </>
       }
