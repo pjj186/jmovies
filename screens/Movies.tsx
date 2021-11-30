@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions, useColorScheme, FlatList } from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
@@ -29,6 +29,7 @@ const HSeperator = styled.View`
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
 
   // useQuery!!
   // useQuery로 받아오는 데이터들을 <MovieResponse> 인터페이스에 적용시켜 받아옴
@@ -52,13 +53,12 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const isDark = useColorScheme() === "dark";
 
   const onRefresh = async () => {
-    queryClient.refetchQueries(["movies"]);
+    setRefreshing(true);
+    await queryClient.refetchQueries(["movies"]);
+    setRefreshing(false);
   };
 
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
-  const refreshing =
-    isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
-  // isRefetching : 리패칭 상태를 boolean 타입으로 반환함. 리패칭이 끝나면 false, 리패칭 중이면 true
 
   return loading ? (
     <Loader />

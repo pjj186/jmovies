@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RefreshControl, ScrollView, useColorScheme } from "react-native";
 import { useQuery } from "react-query";
 import { tvApi } from "../api";
@@ -8,6 +8,7 @@ import { useQueryClient } from "react-query";
 
 const Tv = () => {
   const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
 
   const {
     isLoading: todayLoading,
@@ -27,13 +28,13 @@ const Tv = () => {
 
   const isDark = useColorScheme() === "dark";
 
-  const onRefresh = () => {
-    queryClient.refetchQueries(["tv"]);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await queryClient.refetchQueries(["tv"]);
+    setRefreshing(false);
   };
 
   const loading = todayLoading || topLoading || trendingLoading;
-
-  const refreshing = todayRefetching || topRefetching || trendingRefetching;
 
   if (loading) {
     return <Loader />;
