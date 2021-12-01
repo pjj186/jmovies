@@ -101,7 +101,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         <HMedia
           isDark={isDark}
           posterPath={item.poster_path || ""}
-          Htitle={item.title}
+          originalTitle={item.title}
           overview={item.overview || ""}
           releaseDate={item.release_date}
         />

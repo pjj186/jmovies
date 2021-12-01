@@ -39,7 +39,7 @@ const HList: React.FC<HListProps> = ({ title, data, isDark }) => (
         <VMedia
           isDark={isDark}
           posterPath={item.poster_path}
-          Vtitle={item.title ?? item.name}
+          originalTitle={item.title ?? item.name}
           voteAverage={item.vote_average}
         />
       )}

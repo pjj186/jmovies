@@ -40,7 +40,7 @@ const Title = styled.Text<{ isDark: boolean }>`
 interface HMediaProps {
   isDark: boolean;
   posterPath: string;
-  Htitle: string;
+  originalTitle: string;
   overview: string;
   releaseDate?: string;
   voteAverage?: number;
@@ -49,20 +49,25 @@ interface HMediaProps {
 const HMedia: React.FC<HMediaProps> = ({
   isDark,
   posterPath,
-  Htitle,
+  originalTitle,
   overview,
   releaseDate,
 }) => {
   const navigation = useNavigation();
   const goToDetail = () => {
-    navigation.navigate("Stack", { screen: "Detail" });
+    navigation.navigate("Stack", {
+      screen: "Detail",
+      params: {
+        originalTitle,
+      },
+    });
   };
   return (
     <TouchableOpacity onPress={goToDetail}>
       <HMovie>
         <Poster path={posterPath} />
         <Hcolumn>
-          <Title isDark={isDark}>{Htitle}</Title>
+          <Title isDark={isDark}>{originalTitle}</Title>
           {releaseDate ? (
             <Release isDark={isDark}>
               개봉일:

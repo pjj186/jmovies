@@ -20,28 +20,33 @@ const Title = styled.Text<{ isDark: boolean }>`
 
 interface VMediaProps {
   posterPath: string;
-  Vtitle: string;
+  originalTitle: string;
   voteAverage: number;
   isDark: boolean;
 }
 
 const VMedia: React.FC<VMediaProps> = ({
   posterPath,
-  Vtitle,
+  originalTitle,
   voteAverage,
   isDark,
 }) => {
   const navigation = useNavigation();
   const goToDetail = () => {
-    navigation.navigate("Stack", { screen: "Detail" });
+    navigation.navigate("Stack", {
+      screen: "Detail",
+      params: {
+        originalTitle,
+      },
+    });
   };
   return (
     <TouchableOpacity onPress={goToDetail}>
       <Movie>
         <Poster path={posterPath} />
         <Title isDark={isDark}>
-          {Vtitle.slice(0, 7)}
-          {Vtitle.length > 7 ? "..." : null}
+          {originalTitle.slice(0, 7)}
+          {originalTitle.length > 7 ? "..." : null}
         </Title>
         <Votes isDark={isDark} voteAverage={voteAverage} />
       </Movie>
