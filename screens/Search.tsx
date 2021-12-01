@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useColorScheme } from "react-native";
 import { useQuery } from "react-query";
 import styled from "styled-components/native";
 import { movieAPI, tvApi } from "../api";
+import HList from "../components/HList";
+import Loader from "../components/Loader";
 
 const Container = styled.ScrollView``;
 
@@ -12,10 +15,12 @@ const SearchBar = styled.TextInput`
   border-radius: 15px;
   width: 90%;
   margin: 10px auto;
+  margin-bottom: 40px;
 `;
 
 const Search = () => {
   const [query, setQuery] = useState("");
+  const isDark = useColorScheme() === "dark";
   const {
     isLoading: moviesLoading,
     data: moviesData,
@@ -53,6 +58,17 @@ const Search = () => {
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
       />
+      {moviesLoading || tvLoading ? <Loader /> : null}
+      {moviesData ? (
+        <HList
+          title="Movies Results"
+          data={moviesData.results}
+          isDark={isDark}
+        />
+      ) : null}
+      {tvData ? (
+        <HList title="Tv Results" data={tvData.results} isDark={isDark} />
+      ) : null}
     </Container>
   );
 };
