@@ -3,10 +3,11 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
+import { Movie, TV } from "../api";
 import Poster from "./Poster";
 import Votes from "./Votes";
 
-const Movie = styled.View`
+const Container = styled.View`
   align-items: center;
 `;
 
@@ -23,6 +24,7 @@ interface VMediaProps {
   originalTitle: string;
   voteAverage: number;
   isDark: boolean;
+  fullData: Movie | TV;
 }
 
 const VMedia: React.FC<VMediaProps> = ({
@@ -30,26 +32,27 @@ const VMedia: React.FC<VMediaProps> = ({
   originalTitle,
   voteAverage,
   isDark,
+  fullData,
 }) => {
   const navigation = useNavigation();
   const goToDetail = () => {
     navigation.navigate("Stack", {
       screen: "Detail",
       params: {
-        originalTitle,
+        ...fullData,
       },
     });
   };
   return (
     <TouchableOpacity onPress={goToDetail}>
-      <Movie>
+      <Container>
         <Poster path={posterPath} />
         <Title isDark={isDark}>
           {originalTitle.slice(0, 7)}
           {originalTitle.length > 7 ? "..." : null}
         </Title>
         <Votes isDark={isDark} voteAverage={voteAverage} />
-      </Movie>
+      </Container>
     </TouchableOpacity>
   );
 };

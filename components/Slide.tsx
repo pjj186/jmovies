@@ -6,6 +6,7 @@ import { BlurView } from "expo-blur";
 import Poster from "./Poster";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableWithoutFeedback } from "react-native";
+import { Movie } from "../api";
 
 const BgImg = styled.Image``;
 
@@ -46,6 +47,7 @@ interface SlideProps {
   voteAverage: number;
   originalTitle: string;
   overview: string;
+  fullData: Movie;
 }
 
 // 타입스크립트를 곁들여 리액트 컴포넌트를 생성할 때의 형태
@@ -56,13 +58,14 @@ const Slide: React.FC<SlideProps> = ({
   voteAverage,
   originalTitle,
   overview,
+  fullData,
 }) => {
   const isDark = useColorScheme() === "dark";
   const navigation = useNavigation();
   const goToDetail = () => {
     navigation.navigate("Stack", {
       screen: "Detail",
-      params: { originalTitle },
+      params: { ...fullData },
     });
   };
 
