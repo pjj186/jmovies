@@ -104,13 +104,6 @@ const Detail: React.FC<DetailScreenProps> = ({
     }
   };
 
-  // 컴포넌트
-  const ShareButton = () => (
-    <TouchableOpacity onPress={shareMedia}>
-      <Ionicons name="share-outline" color="white" size={24} />
-    </TouchableOpacity>
-  );
-
   const openYTLink = async (videoID: string) => {
     const baseUrl = `http://m.youtube.com/watch?v=${videoID}`;
     // await Linking.openURL(baseUrl);
@@ -126,7 +119,11 @@ const Detail: React.FC<DetailScreenProps> = ({
     // 헤더는 re-render 하지 않기때문에, data 값이 존재하거나, data 값이 더 로딩됬을 때, 버튼을 헤더에 삽입하는것
     if (data) {
       setOptions({
-        headerRight: () => <ShareButton />,
+        headerRight: () => (
+          <TouchableOpacity onPress={shareMedia}>
+            <Ionicons name="share-outline" color="white" size={24} />
+          </TouchableOpacity>
+        ),
       });
     }
   }, [data]);
