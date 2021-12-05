@@ -3,7 +3,14 @@ import React, { useEffect } from "react";
 import styled from "styled-components/native";
 import { Movie, movieAPI, TV, tvApi } from "../api";
 import Poster from "../components/Poster";
-import { Dimensions, StyleSheet, useColorScheme, Linking } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  useColorScheme,
+  TouchableOpacity,
+  Share,
+  Platform,
+} from "react-native";
 import { makeImagePath } from "../utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { BLACK_COLOR } from "../colors";
@@ -76,6 +83,34 @@ const Detail: React.FC<DetailScreenProps> = ({
     [isMovie ? "movies" : "tv", params.id],
     isMovie ? movieAPI.detail : tvApi.detail // movieAPI.detail에 ["movies", params.id] 쿼리 키를 보냄
   );
+
+  const shareMedia = async () => {
+    const isAndroid = Platform.OS === "android"; // 플랫폼 체크
+    const homepage = isMovie
+      ? `https://www.imdb.com/title/${data.imdb_id}/`
+      : data.homepage;
+    if (isAndroid) {
+      // 안드로이드일 경우
+      await Share.share({
+        message: `${params.overview}\nCheck it out : ${homepage}`,
+        title: "title" in params ? params.title : params.name,
+      });
+    } else {
+      await Share.share({
+        // ios일 경우
+        url: homepage,
+        title: "title" in params ? params.title : params.name,
+      });
+    }
+  };
+
+  // 컴포넌트
+  const ShareButton = () => (
+    <TouchableOpacity onPress={shareMedia}>
+      <Ionicons name="share-outline" color="white" size={24} />
+    </TouchableOpacity>
+  );
+
   const openYTLink = async (videoID: string) => {
     const baseUrl = `http://m.youtube.com/watch?v=${videoID}`;
     // await Linking.openURL(baseUrl);
@@ -87,6 +122,15 @@ const Detail: React.FC<DetailScreenProps> = ({
       title: "title" in params ? "Movie" : "TV Show",
     });
   }, []);
+  useEffect(() => {
+    // 헤더는 re-render 하지 않기때문에, data 값이 존재하거나, data 값이 더 로딩됬을 때, 버튼을 헤더에 삽입하는것
+    if (data) {
+      setOptions({
+        headerRight: () => <ShareButton />,
+      });
+    }
+  }, [data]);
+
   return (
     <Container>
       <Header>
