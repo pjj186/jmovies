@@ -35,8 +35,22 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   // useQuery로 받아오는 데이터들을 <MovieResponse> 인터페이스에 적용시켜 받아옴
   const { isLoading: nowPlayingLoading, data: nowPlayingData } =
     useQuery<MovieResponse>(["movies", "nowPlaying"], movieAPI.nowPlaying);
-  const { isLoading: upcomingLoading, data: upcomingData } =
-    useInfiniteQuery<MovieResponse>(["movies", "upcoming"], movieAPI.upcoming);
+  const {
+    isLoading: upcomingLoading,
+    data: upcomingData,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery<MovieResponse>(
+    ["movies", "upcoming"],
+    movieAPI.upcoming,
+    {
+      getNextPageParam: (currentPage) => {
+        const nextPage = currentPage.page + 1;
+        // fetcher에 자동으로 전달 (pageParam)
+        return nextPage > currentPage.total_pages ? null : nextPage;
+      },
+    }
+  );
   const { isLoading: trendingLoading, data: trendingData } =
     useQuery<MovieResponse>(["movies", "trending"], movieAPI.trending);
   // useQuery!!
@@ -49,13 +63,19 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   };
 
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
-  const loadMore = () => {};
+
+  const loadMore = () => {
+    // 다음 페이지 fetch
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
   return loading ? (
     <Loader />
   ) : upcomingData ? (
     <FlatList
       onEndReached={loadMore} // 끝 지점에 도달했을 때 함수를 실행
-      onEndReachedThreshold={0.4} // 끝 지점이 어디를 의미하는지 설정
       onRefresh={onRefresh}
       refreshing={refreshing}
       ListHeaderComponent={
