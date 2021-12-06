@@ -5,7 +5,7 @@ import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient, useInfiniteQuery } from "react-query";
 import { movieAPI, MovieResponse } from "../api";
 import Loader from "../components/Loader";
 import HList from "../components/HList";
@@ -36,13 +36,12 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const { isLoading: nowPlayingLoading, data: nowPlayingData } =
     useQuery<MovieResponse>(["movies", "nowPlaying"], movieAPI.nowPlaying);
   const { isLoading: upcomingLoading, data: upcomingData } =
-    useQuery<MovieResponse>(["movies", "upcoming"], movieAPI.upcoming);
+    useInfiniteQuery<MovieResponse>(["movies", "upcoming"], movieAPI.upcoming);
   const { isLoading: trendingLoading, data: trendingData } =
     useQuery<MovieResponse>(["movies", "trending"], movieAPI.trending);
   // useQuery!!
 
   const isDark = useColorScheme() === "dark";
-
   const onRefresh = async () => {
     setRefreshing(true);
     await queryClient.refetchQueries(["movies"]);
@@ -50,11 +49,13 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   };
 
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
-
+  const loadMore = () => {};
   return loading ? (
     <Loader />
   ) : upcomingData ? (
     <FlatList
+      onEndReached={loadMore} // 끝 지점에 도달했을 때 함수를 실행
+      onEndReachedThreshold={0.4} // 끝 지점이 어디를 의미하는지 설정
       onRefresh={onRefresh}
       refreshing={refreshing}
       ListHeaderComponent={
@@ -94,7 +95,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
           <ComingSoonTitle isDark={isDark}>Coming soon</ComingSoonTitle>
         </>
       }
-      data={upcomingData.results}
+      data={upcomingData.pages.map((page) => page.results).flat()}
       keyExtractor={(item) => item.id + ""}
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={HSeperator}
