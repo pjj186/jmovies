@@ -40,9 +40,9 @@ const Column = styled.View`
 
 const Title = styled.Text`
   color: white;
-  font-size: 36px;
+  font-size: 30px;
   align-self: flex-end;
-  margin-left: 15px;
+  margin-left: 10px;
   font-weight: 500;
 `;
 
