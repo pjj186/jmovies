@@ -160,18 +160,30 @@ export const movieAPI = {
 };
 
 export const tvApi = {
-  trending: () =>
-    fetch(
-      `${BASE_URL}/trending/tv/week?api_key=${API_KEY}&language=ko-KR&page=1&region=KR`
-    ).then((res) => res.json()),
-  airingToday: () =>
-    fetch(
-      `${BASE_URL}/tv/airing_today?api_key=${API_KEY}&language=ko-KR&page=1`
-    ).then((res) => res.json()),
-  topRated: () =>
-    fetch(
-      `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko-KR&page=1&region=KR`
-    ).then((res) => res.json()),
+  trending: ({ pageParam }) => {
+    if (pageParam === undefined) {
+      pageParam = 1;
+    }
+    return fetch(
+      `${BASE_URL}/trending/tv/week?api_key=${API_KEY}&language=ko-KR&page=${pageParam}&region=KR`
+    ).then((res) => res.json());
+  },
+  airingToday: ({ pageParam }) => {
+    if (pageParam === undefined) {
+      pageParam = 1;
+    }
+    return fetch(
+      `${BASE_URL}/tv/airing_today?api_key=${API_KEY}&language=ko-KR&page=${pageParam}`
+    ).then((res) => res.json());
+  },
+  topRated: ({ pageParam }) => {
+    if (pageParam === undefined) {
+      pageParam = 1;
+    }
+    return fetch(
+      `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko-KR&page=${pageParam}&region=KR`
+    ).then((res) => res.json());
+  },
   search: ({ queryKey }) => {
     const [_, query] = queryKey;
     return fetch(

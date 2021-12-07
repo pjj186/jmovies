@@ -4,24 +4,54 @@ import { useQuery } from "react-query";
 import { tvApi } from "../api";
 import HList from "../components/HList";
 import Loader from "../components/Loader";
-import { useQueryClient } from "react-query";
+import { useQueryClient, useInfiniteQuery } from "react-query";
 
 const Tv = () => {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
 
-  const { isLoading: todayLoading, data: todayData } = useQuery(
-    ["tv", "today"],
-    tvApi.airingToday
-  );
-  const { isLoading: topLoading, data: topData } = useQuery(
-    ["tv", "top"],
-    tvApi.topRated
-  );
-  const { isLoading: trendingLoading, data: trendingData } = useQuery(
-    ["tv", "trending"],
-    tvApi.trending
-  );
+  const {
+    isLoading: todayLoading,
+    data: todayData,
+    hasNextPage: todayHasNextpage,
+    fetchNextPage: todayFetchNextPage,
+  } = useInfiniteQuery(["tv", "today"], tvApi.airingToday, {
+    getNextPageParam: (currentPage) => {
+      if (currentPage.page === undefined) {
+        currentPage.page = 1;
+      }
+      const nextPage = currentPage.page + 1;
+      return nextPage > currentPage.total_pages ? null : nextPage;
+    },
+  });
+  const {
+    isLoading: topLoading,
+    data: topData,
+    hasNextPage: topHasNextPage,
+    fetchNextPage: topFetchNextPage,
+  } = useInfiniteQuery(["tv", "top"], tvApi.topRated, {
+    getNextPageParam: (currentPage) => {
+      if (currentPage.page === undefined) {
+        currentPage.page = 1;
+      }
+      const nextPage = currentPage.page + 1;
+      return nextPage > currentPage.total_pages ? null : nextPage;
+    },
+  });
+  const {
+    isLoading: trendingLoading,
+    data: trendingData,
+    hasNextPage: trendingHasNextPage,
+    fetchNextPage: trendingFetchNextPage,
+  } = useInfiniteQuery(["tv", "trending"], tvApi.trending, {
+    getNextPageParam: (currentPage) => {
+      if (currentPage.page === undefined) {
+        currentPage.page = 1;
+      }
+      const nextPage = currentPage.page + 1;
+      return nextPage > currentPage.total_pages ? null : nextPage;
+    },
+  });
 
   const isDark = useColorScheme() === "dark";
 
@@ -43,9 +73,27 @@ const Tv = () => {
       }
       contentContainerStyle={{ paddingVertical: 30 }}
     >
-      <HList title="Trending TV" data={trendingData.results} isDark={isDark} />
-      <HList title="Airing Today" data={todayData.results} isDark={isDark} />
-      <HList title="Top Rated TV" data={topData.results} isDark={isDark} />
+      <HList
+        title="Trending TV"
+        data={trendingData.pages.map((page) => page.results).flat()}
+        isDark={isDark}
+        hasnextpage={trendingHasNextPage}
+        fetchnextpage={trendingFetchNextPage}
+      />
+      <HList
+        title="Airing Today"
+        data={todayData.pages.map((page) => page.results).flat()}
+        isDark={isDark}
+        hasnextpage={todayHasNextpage}
+        fetchnextpage={todayFetchNextPage}
+      />
+      <HList
+        title="Top Rated TV"
+        data={topData.pages.map((page) => page.results).flat()}
+        isDark={isDark}
+        hasnextpage={topHasNextPage}
+        fetchnextpage={topFetchNextPage}
+      />
     </ScrollView>
   );
 };

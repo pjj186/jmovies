@@ -23,7 +23,7 @@ interface HListProps {
   title: string;
   data: any[];
   isDark: boolean;
-  hasnextpage: boolean;
+  hasnextpage?: boolean;
   fetchnextpage: Function;
 }
 
