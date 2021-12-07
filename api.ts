@@ -1,3 +1,5 @@
+import { QueryFunction } from "react-query";
+
 //모든 데이터를 fetch 해주는 함수들이 모여있는 파일
 const API_KEY = "0c6f3c84d4564ed4f2afcb7aa3744089";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -128,7 +130,28 @@ export interface TVResponse extends BaseResponse {
   results: TV[];
 }
 
-export const movieAPI = {
+type MovieListResponse = QueryFunction<MovieResponse>;
+type TVListResponse = QueryFunction<TVResponse>;
+
+interface MovieFetchers {
+  // 다 배열 리턴임
+  trending: MovieListResponse;
+  upcoming: MovieListResponse;
+  nowPlaying: MovieListResponse;
+  search: MovieListResponse;
+  detail: QueryFunction<MovieDetails>;
+}
+
+interface TVFetchers {
+  // 다 배열 리턴임
+  trending: TVListResponse;
+  airingToday: TVListResponse;
+  topRated: TVListResponse;
+  search: TVListResponse;
+  detail: QueryFunction<TVDetails>;
+}
+
+export const movieAPI: MovieFetchers = {
   trending: ({ pageParam }) => {
     if (pageParam === undefined) {
       pageParam = 1;
@@ -145,10 +168,10 @@ export const movieAPI = {
     fetch(
       `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&page=1&region=KR`
     ).then((res) => res.json()),
-  search: ({ queryKey }) => {
+  search: ({ queryKey, pageParam }) => {
     const [_, query] = queryKey;
     return fetch(
-      `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&page=1&region=KR&query=${query}`
+      `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&page=${pageParam}&region=KR&query=${query}`
     ).then((res) => res.json());
   },
   detail: ({ queryKey }) => {
@@ -159,7 +182,7 @@ export const movieAPI = {
   },
 };
 
-export const tvApi = {
+export const tvApi: TVFetchers = {
   trending: ({ pageParam }) => {
     if (pageParam === undefined) {
       pageParam = 1;
@@ -184,10 +207,10 @@ export const tvApi = {
       `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko-KR&page=${pageParam}&region=KR`
     ).then((res) => res.json());
   },
-  search: ({ queryKey }) => {
+  search: ({ queryKey, pageParam }) => {
     const [_, query] = queryKey;
     return fetch(
-      `${BASE_URL}/search/tv?api_key=${API_KEY}&language=ko-KR&page=1&region=KR&query=${query}`
+      `${BASE_URL}/search/tv?api_key=${API_KEY}&language=ko-KR&page=${pageParam}&region=KR&query=${query}`
     ).then((res) => res.json());
   },
   detail: ({ queryKey }) => {

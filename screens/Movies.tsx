@@ -65,6 +65,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         if (currentPage.page === undefined) {
           currentPage.page = 1;
         }
+
         const nextPage = currentPage.page + 1;
         return nextPage > currentPage.total_pages ? null : nextPage;
       },
@@ -126,7 +127,6 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
             <HList
               hasnextpage={trendingHasNextPage}
               fetchnextpage={trendingFetchNextPage}
-              has
               title="Trending Movies"
               data={trendingData.pages.map((page) => page.results).flat()}
               isDark={isDark}

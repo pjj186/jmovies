@@ -63,6 +63,7 @@ const Slide: React.FC<SlideProps> = ({
   const isDark = useColorScheme() === "dark";
   const navigation = useNavigation();
   const goToDetail = () => {
+    //@ts-ignore
     navigation.navigate("Stack", {
       screen: "Detail",
       params: { ...fullData },

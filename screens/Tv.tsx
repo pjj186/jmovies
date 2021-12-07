@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView, useColorScheme } from "react-native";
-import { useQuery } from "react-query";
 import { tvApi } from "../api";
 import HList from "../components/HList";
 import Loader from "../components/Loader";
@@ -75,21 +74,21 @@ const Tv = () => {
     >
       <HList
         title="Trending TV"
-        data={trendingData.pages.map((page) => page.results).flat()}
+        data={trendingData?.pages.map((page) => page.results).flat()}
         isDark={isDark}
         hasnextpage={trendingHasNextPage}
         fetchnextpage={trendingFetchNextPage}
       />
       <HList
         title="Airing Today"
-        data={todayData.pages.map((page) => page.results).flat()}
+        data={todayData?.pages.map((page) => page.results).flat()}
         isDark={isDark}
         hasnextpage={todayHasNextpage}
         fetchnextpage={todayFetchNextPage}
       />
       <HList
         title="Top Rated TV"
-        data={topData.pages.map((page) => page.results).flat()}
+        data={topData?.pages.map((page) => page.results).flat()}
         isDark={isDark}
         hasnextpage={topHasNextPage}
         fetchnextpage={topFetchNextPage}

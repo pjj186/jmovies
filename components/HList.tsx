@@ -21,7 +21,7 @@ export const HListSeperator = styled.View`
 
 interface HListProps {
   title: string;
-  data: any[];
+  data?: any[];
   isDark: boolean;
   hasnextpage?: boolean;
   fetchnextpage: Function;
