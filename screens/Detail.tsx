@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import styled from "styled-components/native";
-import { Movie, movieAPI, TV, tvApi } from "../api";
+import { Movie, movieAPI, MovieDetails, TV, tvApi, TVDetails } from "../api";
 import Poster from "../components/Poster";
 import {
   Dimensions,
@@ -79,7 +79,7 @@ const Detail: React.FC<DetailScreenProps> = ({
 }) => {
   const isDark = useColorScheme() === "dark";
   const isMovie = "original_title" in params;
-  const { isLoading, data } = useQuery(
+  const { isLoading, data } = useQuery<MovieDetails | TVDetails>(
     [isMovie ? "movies" : "tv", params.id],
     isMovie ? movieAPI.detail : tvApi.detail // movieAPI.detail에 ["movies", params.id] 쿼리 키를 보냄
   );
