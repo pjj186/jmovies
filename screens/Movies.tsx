@@ -38,8 +38,8 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const {
     isLoading: upcomingLoading,
     data: upcomingData,
-    hasNextPage,
-    fetchNextPage,
+    hasNextPage: upcomingHasNextPage,
+    fetchNextPage: upcomingFetchNextPage,
   } = useInfiniteQuery<MovieResponse>(
     ["movies", "upcoming"],
     movieAPI.upcoming,
@@ -51,8 +51,25 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
       },
     }
   );
-  const { isLoading: trendingLoading, data: trendingData } =
-    useQuery<MovieResponse>(["movies", "trending"], movieAPI.trending);
+  const {
+    isLoading: trendingLoading,
+    data: trendingData,
+    hasNextPage: trendingHasNextPage,
+    fetchNextPage: trendingFetchNextPage,
+  } = useInfiniteQuery<MovieResponse>(
+    ["movies", "trending"],
+    movieAPI.trending,
+    {
+      getNextPageParam: (currentPage) => {
+        // currentPage에는 현재 페이지의 json이 들어감.
+        if (currentPage.page === undefined) {
+          currentPage.page = 1;
+        }
+        const nextPage = currentPage.page + 1;
+        return nextPage > currentPage.total_pages ? null : nextPage;
+      },
+    }
+  );
   // useQuery!!
 
   const isDark = useColorScheme() === "dark";
@@ -64,10 +81,10 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
 
-  const loadMore = () => {
+  const upcomingLoadMore = () => {
     // 다음 페이지 fetch
-    if (hasNextPage) {
-      fetchNextPage();
+    if (upcomingHasNextPage) {
+      upcomingFetchNextPage();
     }
   };
 
@@ -75,7 +92,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     <Loader />
   ) : upcomingData ? (
     <FlatList
-      onEndReached={loadMore} // 끝 지점에 도달했을 때 함수를 실행
+      onEndReached={upcomingLoadMore} // 끝 지점에 도달했을 때 함수를 실행
       onRefresh={onRefresh}
       refreshing={refreshing}
       ListHeaderComponent={
@@ -107,8 +124,11 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
           </Swiper>
           {trendingData ? (
             <HList
+              hasnextpage={trendingHasNextPage}
+              fetchnextpage={trendingFetchNextPage}
+              has
               title="Trending Movies"
-              data={trendingData.results}
+              data={trendingData.pages.map((page) => page.results).flat()}
               isDark={isDark}
             />
           ) : null}

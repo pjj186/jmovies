@@ -23,29 +23,45 @@ interface HListProps {
   title: string;
   data: any[];
   isDark: boolean;
+  hasnextpage: boolean;
+  fetchnextpage: Function;
 }
 
-const HList: React.FC<HListProps> = ({ title, data, isDark }) => (
-  <ListContainer>
-    <ListTitle isDark={isDark}>{title}</ListTitle>
-    <FlatList
-      data={data}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ paddingHorizontal: 30 }}
-      ItemSeparatorComponent={HListSeperator}
-      keyExtractor={(item) => item.id + ""}
-      renderItem={({ item }) => (
-        <VMedia
-          isDark={isDark}
-          posterPath={item.poster_path}
-          originalTitle={item.title ?? item.name}
-          voteAverage={item.vote_average}
-          fullData={item}
-        />
-      )}
-    />
-  </ListContainer>
-);
+const HList: React.FC<HListProps> = ({
+  title,
+  data,
+  isDark,
+  hasnextpage,
+  fetchnextpage,
+}) => {
+  const loadMore = () => {
+    if (hasnextpage) {
+      fetchnextpage();
+    }
+  };
+  return (
+    <ListContainer>
+      <ListTitle isDark={isDark}>{title}</ListTitle>
+      <FlatList
+        onEndReached={loadMore}
+        data={data}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 30 }}
+        ItemSeparatorComponent={HListSeperator}
+        keyExtractor={(item) => item.id + ""}
+        renderItem={({ item }) => (
+          <VMedia
+            isDark={isDark}
+            posterPath={item.poster_path}
+            originalTitle={item.title ?? item.name}
+            voteAverage={item.vote_average}
+            fullData={item}
+          />
+        )}
+      />
+    </ListContainer>
+  );
+};
 
 export default HList;
