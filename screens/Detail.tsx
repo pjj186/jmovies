@@ -40,7 +40,7 @@ const Column = styled.View`
 
 const Title = styled.Text`
   color: white;
-  font-size: 30px;
+  font-size: 25px;
   align-self: flex-end;
   margin-left: 10px;
   font-weight: 500;
